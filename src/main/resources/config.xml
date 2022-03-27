@@ -9,4 +9,7 @@
 
     <bean id="myRandomInt" class="com.example.demo.GetRandomInteger"/>
     <bean id="myAnnouncer" class="com.example.demo.Announcer"/>
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="text"/>
+    </bean>
 </beans>

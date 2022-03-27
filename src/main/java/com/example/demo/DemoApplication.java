@@ -1,32 +1,32 @@
 package com.example.demo;
-
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
-//@SpringBootApplication
 public class DemoApplication {
 
 	public static void main(String[] args) {
 
 		ApplicationContext context = new ClassPathXmlApplicationContext("config.xml");
 		GetRandomInteger randInt = (GetRandomInteger) context.getBean(GetRandomInteger.class);
-		Announcer anncr = (Announcer) context.getBean(Announcer.class);
 		int randomizeNumber = randInt.getRandomInt();
+		ResourceBundle rsrcbndl = ResourceBundle.getBundle("text", new Locale("en"));
+
 		Scanner sc = new Scanner(System.in);
-		System.out.println("Привет, я загадал число, попробуй его отгадать!\nДелай попытку, можно вводить числа от 0 до 1000!");
+
+		System.out.println(rsrcbndl.getString("start") + "\n" + rsrcbndl.getString("starttry"));
+		context.publishEvent(new GuessEvent(randInt));
 		while (true) {
 			int number = sc.nextInt();
 			if ( number > randomizeNumber ) {
-				context.publishEvent(GuessEvent.of("Мое число поменьше твоего"));
+				context.publishEvent(GuessEvent.less());
 			} else if ( number < randomizeNumber) {
-				context.publishEvent(GuessEvent.of("Мое число побольше твоего"));
+				context.publishEvent(GuessEvent.more());
 			} else break;
 		}
-		System.out.println("Ты угадал, я загадал число " + randomizeNumber);
+		System.out.println(rsrcbndl.getString("figuredOut") + " " + randomizeNumber);
 		sc.close();
 	}
-
 }
